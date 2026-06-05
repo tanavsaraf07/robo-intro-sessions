@@ -62,15 +62,35 @@ void loop() {
     else{
   setColor(0, 255, 0);
   if (x_active){
-    if (x_raw > 1255) Keyboard.write(KEY_MEDIA_VOLUME_UP);
-    else Keyboard.write(KEY_MEDIA_VOLUME_DOWN);
-    delay(300);
+  if (x_raw > 1255){
+    Keyboard.press(KEY_LEFT_CTRL);
+    Keyboard.press(KEY_LEFT_ALT);
+    Keyboard.write('2');
+    Keyboard.releaseAll();
   }
-  if (y_active){
-    if (y_raw > 1867) Keyboard.write(KEY_MEDIA_NEXT_TRACK);
-    else Keyboard.write(KEY_MEDIA_PREVIOUS_TRACK);
-    delay(300);
+  else{
+    Keyboard.press(KEY_LEFT_CTRL);
+    Keyboard.press(KEY_LEFT_ALT);
+    Keyboard.write('1');
+    Keyboard.releaseAll();
   }
+  delay(300);
+}
+if (y_active){
+  if (y_raw > 1867){
+    Keyboard.press(KEY_LEFT_CTRL);
+    Keyboard.press(KEY_LEFT_ALT);
+    Keyboard.write('9');
+    Keyboard.releaseAll();
+  }
+  else{
+    Keyboard.press(KEY_LEFT_CTRL);
+    Keyboard.press(KEY_LEFT_ALT);
+    Keyboard.write('0');
+    Keyboard.releaseAll();
+  }
+  delay(300);
+}
 }
   } else {
     setColor(255, 0, 0);
