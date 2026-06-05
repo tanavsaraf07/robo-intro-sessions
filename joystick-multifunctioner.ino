@@ -45,56 +45,44 @@ void loop() {
     int x_raw = analogRead(x_pin);
     int y_raw = analogRead(y_pin);
 
-    bool x_active = abs(x_raw - 1255) > 300;
-    bool y_active = abs(y_raw - 1867) > 300;
+    // per mode deadzone
+    int deadzone_x, deadzone_y;
+    if (cur_st == scroll)       { deadzone_x = 700; deadzone_y = 700; }
+    else if (cur_st == cursor)  { deadzone_x = 500; deadzone_y = 300; }
+    else                        { deadzone_x = 900; deadzone_y = 900; }
+
+    bool x_active = abs(x_raw - 1255) > deadzone_x;
+    bool y_active = abs(y_raw - 1867) > deadzone_y;
+
     if (cur_st == scroll) {
       setColor(0, 255, 255);
       int scroll_x = x_active ? map(x_raw, 0, 2612, -5, 5) : 0;
       int scroll_y = y_active ? map(y_raw, 0, 4095, 5, -5) : 0;
+      if (abs(scroll_x) < 2) scroll_x = 0;
+      if (abs(scroll_y) < 2) scroll_y = 0;
       Mouse.move(0, 0, scroll_y, scroll_x);
-    } else if (cur_st == cursor) {
+    }
+    else if (cur_st == cursor) {
       setColor(0, 0, 255);
       int move_x = x_active ? map(x_raw, 0, 2612, -10, 10) : 0;
       int move_y = y_active ? map(y_raw, 0, 4095, -10, 10) : 0;
       Mouse.move(move_x, move_y, 0, 0);
-    } 
-    
-    else{
-    bool x_active = abs(x_raw - 1255) > 500;
-    bool y_active = abs(y_raw - 1867) > 500;
-  setColor(0, 255, 0);
-  if (x_active){
-  if (x_raw > 1255){
-    Keyboard.press(KEY_LEFT_CTRL);
-    Keyboard.press(KEY_LEFT_ALT);
-    Keyboard.write('2');
-    Keyboard.releaseAll();
+    }
+    else {
+      setColor(0, 255, 0);
+      if (x_active) {
+        if (x_raw > 1255) { Keyboard.press(KEY_LEFT_CTRL); Keyboard.press(KEY_LEFT_ALT); Keyboard.write('2'); Keyboard.releaseAll(); }
+        else              { Keyboard.press(KEY_LEFT_CTRL); Keyboard.press(KEY_LEFT_ALT); Keyboard.write('1'); Keyboard.releaseAll(); }
+        delay(300);
+      }
+      if (y_active) {
+        if (y_raw > 1867) { Keyboard.press(KEY_LEFT_CTRL); Keyboard.press(KEY_LEFT_ALT); Keyboard.write('9'); Keyboard.releaseAll(); }
+        else              { Keyboard.press(KEY_LEFT_CTRL); Keyboard.press(KEY_LEFT_ALT); Keyboard.write('0'); Keyboard.releaseAll(); }
+        delay(300);
+      }
+    }
   }
-  else{
-    Keyboard.press(KEY_LEFT_CTRL);
-    Keyboard.press(KEY_LEFT_ALT);
-    Keyboard.write('1');
-    Keyboard.releaseAll();
-  }
-  delay(300);
-}
-if (y_active){
-  if (y_raw > 1867){
-    Keyboard.press(KEY_LEFT_CTRL);
-    Keyboard.press(KEY_LEFT_ALT);
-    Keyboard.write('9');
-    Keyboard.releaseAll();
-  }
-  else{
-    Keyboard.press(KEY_LEFT_CTRL);
-    Keyboard.press(KEY_LEFT_ALT);
-    Keyboard.write('0');
-    Keyboard.releaseAll();
-  }
-  delay(300);
-}
-}
-  } else {
+  else {
     setColor(255, 0, 0);
   }
   delay(10);
