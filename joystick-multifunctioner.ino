@@ -60,6 +60,8 @@ void loop() {
     } 
     
     else{
+    bool x_active = abs(x_raw - 1255) > 500;
+    bool y_active = abs(y_raw - 1867) > 500;
   setColor(0, 255, 0);
   if (x_active){
   if (x_raw > 1255){
